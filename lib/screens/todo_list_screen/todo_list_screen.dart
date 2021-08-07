@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/models/todo_model.dart';
+import 'package:flutter_todo_app/screens/add_todo_form_screen/add_todo_form_screen.dart';
 
 class TodoListScreen extends StatefulWidget {
   const TodoListScreen({Key? key}) : super(key: key);
@@ -38,10 +39,8 @@ class _TodoListScreenState extends State<TodoListScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  // TODO: Apply later
-                  builder: (context) => Text('add todo form'),
+                  builder: (context) => AddTodoFormScreen(),
                   fullscreenDialog: true));
-          // builder: (context) => AddTodoPage(), fullscreenDialog: true));
         },
         child: const Icon(Icons.add),
       ),
