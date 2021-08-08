@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/repositories/todo_repository.dart';
 import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_screen.dart';
 
 class AddTodoFormScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class AddTodoFormScreen extends StatefulWidget {
 
 class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  String _title = '';
+  String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,11 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                 padding: EdgeInsets.all(10),
                 child: Column(children: <Widget>[
                   TextFormField(
+                    onSaved: (value) {
+                      if (value != null) {
+                        _title = value;
+                      }
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -35,6 +43,11 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                   SizedBox(height: 10),
                   TextFormField(
                     maxLines: 10,
+                    onSaved: (value) {
+                      if (value != null) {
+                        _description = value;
+                      }
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -47,8 +60,16 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                   Center(
                       child: ElevatedButton(
                           child: const Text('Submit'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
+                              _formKey.currentState?.save();
+                              try {
+                                await TodoRepository()
+                                    .postTodo(_title, _description);
+                              } catch (e) {
+                                print(e.toString());
+                                return;
+                              }
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     backgroundColor: Colors.green,
