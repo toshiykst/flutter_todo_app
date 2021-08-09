@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/repositories/todo_repository.dart';
-import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_screen.dart';
 
 class AddTodoFormScreen extends StatefulWidget {
   const AddTodoFormScreen({Key? key}) : super(key: key);
@@ -80,10 +79,7 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                                       const Text('added todo')
                                     ])),
                               );
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TodoListScreen()));
+                              Navigator.of(context).pop(true);
                             }
                           }))
                 ]))));

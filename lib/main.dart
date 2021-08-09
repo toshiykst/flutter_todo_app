@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

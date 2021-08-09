@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_app/models/todo.dart';
 import 'package:flutter_todo_app/screens/add_todo_form_screen/add_todo_form_screen.dart';
+import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_view_model.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TodoListScreen extends StatefulWidget {
-  const TodoListScreen({Key? key}) : super(key: key);
-
+class TodoListScreen extends HookConsumerWidget {
   @override
-  _TodoListScreenState createState() => _TodoListScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(todoListProvider);
 
-class _TodoListScreenState extends State<TodoListScreen> {
-  // TODO: this is mock todo items.
-  final List<Todo> todos = List<Todo>.generate(
-      30,
-      (index) => Todo(
-          id: index,
-          title: 'title$index',
-          description: 'this is my todo$index'));
+    final todos = state.todos;
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo list'),
@@ -35,12 +25,16 @@ class _TodoListScreenState extends State<TodoListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final isAddedTodo = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => AddTodoFormScreen(),
                   fullscreenDialog: true));
+
+          if (isAddedTodo) {
+            ref.read(todoListProvider.notifier).getTodos();
+          }
         },
         child: const Icon(Icons.add),
       ),
