@@ -33,7 +33,7 @@ class TodoListScreen extends HookConsumerWidget {
                   fullscreenDialog: true));
 
           if (isAddedTodo) {
-            ref.read(todoListProvider.notifier).getTodos();
+            ref.read(todoListProvider.notifier).fetchTodos();
           }
         },
         child: const Icon(Icons.add),

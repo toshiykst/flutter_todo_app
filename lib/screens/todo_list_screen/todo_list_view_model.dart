@@ -12,15 +12,15 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
   bool _isLoading = false;
 
   TodoListViewModel(this.repository) : super(TodoListState()) {
-    getTodos();
+    fetchTodos();
   }
 
-  Future<void> getTodos() async {
+  Future<void> fetchTodos() async {
     if (_isLoading) return;
 
     _isLoading = true;
 
-    final todos = await repository.fetchTodos();
+    final todos = await repository.getTodos();
 
     state = state.copyWith(todos: todos);
 

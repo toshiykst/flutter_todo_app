@@ -25,7 +25,7 @@ class TodoRepository {
         'todos', [...?prefs.getStringList('todos'), jsonEncode(todo.toJson())]);
   }
 
-  Future<List<Todo>> fetchTodos() async {
+  Future<List<Todo>> getTodos() async {
     final SharedPreferences prefs = await _prefs;
     final todoJsonStrings = await prefs.getStringList('todos');
     if (todoJsonStrings == null) return [];
