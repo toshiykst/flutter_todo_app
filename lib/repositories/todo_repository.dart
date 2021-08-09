@@ -27,8 +27,11 @@ class TodoRepository {
 
   Future<List<Todo>> fetchTodos() async {
     final SharedPreferences prefs = await _prefs;
-    final todoJsonList = await prefs.getStringList('todos');
-    if (todoJsonList == null) return [];
-    return todoJsonList.map((json) => Todo.fromJson(jsonDecode(json))).toList();
+    final todoJsonStrings = await prefs.getStringList('todos');
+    if (todoJsonStrings == null) return [];
+    final todos =
+        todoJsonStrings.map((json) => Todo.fromJson(jsonDecode(json))).toList();
+    todos.sort((a, b) => b.id.compareTo(a.id));
+    return todos;
   }
 }
