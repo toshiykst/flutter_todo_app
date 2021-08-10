@@ -6,9 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class TodoListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(todoListProvider);
-
-    final todos = state.todos;
+    final todos = ref.watch(todoListProvider.select((s) => s.todos));
 
     return Scaffold(
       appBar: AppBar(
