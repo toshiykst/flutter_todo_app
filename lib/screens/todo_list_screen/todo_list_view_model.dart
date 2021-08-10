@@ -7,11 +7,11 @@ final todoListProvider =
         (_) => TodoListViewModel(TodoRepository()));
 
 class TodoListViewModel extends StateNotifier<TodoListState> {
-  final TodoRepository repository;
+  final TodoRepository _repository;
 
   bool _isLoading = false;
 
-  TodoListViewModel(this.repository) : super(TodoListState()) {
+  TodoListViewModel(this._repository) : super(TodoListState()) {
     fetchTodos();
   }
 
@@ -20,7 +20,7 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
 
     _isLoading = true;
 
-    final todos = await repository.getTodos();
+    final todos = await _repository.getTodos();
 
     state = state.copyWith(todos: todos);
 
