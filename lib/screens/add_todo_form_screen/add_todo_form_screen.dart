@@ -17,12 +17,12 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add todo'),
+          title: const Text('Add todo'),
         ),
         body: Form(
             key: _formKey,
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(children: <Widget>[
                   TextFormField(
                     onSaved: (value) {
@@ -36,10 +36,10 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: 'Title', border: OutlineInputBorder()),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     maxLines: 10,
                     onSaved: (value) {
@@ -53,7 +53,7 @@ class _AddTodoFormScreenState extends State<AddTodoFormScreen> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: 'Description', border: OutlineInputBorder()),
                   ),
                   Center(

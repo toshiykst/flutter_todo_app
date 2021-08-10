@@ -12,7 +12,7 @@ class TodoListScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo list'),
+        title: const Text('Todo list'),
       ),
       body: ListView.builder(
         itemCount: todos.length,
