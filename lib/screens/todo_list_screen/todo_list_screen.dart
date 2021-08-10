@@ -20,7 +20,6 @@ class TodoListScreen extends HookConsumerWidget {
           final todo = todos[index];
           return ListTile(
             title: Text(todo.title),
-            trailing: Icon(Icons.more_vert),
           );
         },
       ),
