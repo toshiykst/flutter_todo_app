@@ -8,13 +8,21 @@ class TodoRepository {
       SharedPreferences.getInstance();
 
   Future<int> _generateId() async {
+    final todos = await _getStoredTodos();
+    if (todos.length == 0) return 1;
+    final latestTodo = todos.last;
+    return latestTodo.id + 1;
+  }
+
+  Future<List<Todo>> _getStoredTodos() async {
     final SharedPreferences prefs = await _prefs;
     final storedTodoStrings = prefs.getStringList('todos');
     if (storedTodoStrings == null || storedTodoStrings.length == 0) {
-      return 1;
+      return [];
     }
-    final latestTodo = Todo.fromJson(jsonDecode(storedTodoStrings.last));
-    return latestTodo.id + 1;
+    return storedTodoStrings
+        .map((todoString) => Todo.fromJson(jsonDecode(todoString)))
+        .toList();
   }
 
   Future<void> postTodo(String title, String description) async {
@@ -26,11 +34,7 @@ class TodoRepository {
   }
 
   Future<List<Todo>> getTodos() async {
-    final SharedPreferences prefs = await _prefs;
-    final todoJsonStrings = await prefs.getStringList('todos');
-    if (todoJsonStrings == null) return [];
-    final todos =
-        todoJsonStrings.map((json) => Todo.fromJson(jsonDecode(json))).toList();
+    final todos = await _getStoredTodos();
     todos.sort((a, b) => b.id.compareTo(a.id));
     return todos;
   }
