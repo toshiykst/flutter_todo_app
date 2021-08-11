@@ -11,6 +11,7 @@ class Todo with _$Todo {
     required int id,
     required String title,
     required String description,
+    @Default(false) bool done,
   }) = _Todo;
 
   factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
