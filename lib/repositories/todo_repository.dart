@@ -38,4 +38,11 @@ class TodoRepository {
     todos.sort((a, b) => b.id.compareTo(a.id));
     return todos;
   }
+
+  Future<void> updateTodo(Todo todo) async {
+    final todos = await _getStoredTodos();
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setStringList('todos',
+        todos.map((v) => jsonEncode(v.id == todo.id ? todo : v)).toList());
+  }
 }
