@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_todo_app/models/todo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,12 +26,21 @@ class TodoRepository {
         .toList();
   }
 
+  Future<Todo?> _getStoredTodo(int id) async {
+    final todos = await _getStoredTodos();
+    return todos.firstWhereOrNull((todo) => todo.id == id);
+  }
+
   Future<void> postTodo(String title, String description) async {
     final id = await _generateId();
     final todo = Todo(id: id, title: title, description: description);
     final SharedPreferences prefs = await _prefs;
     await prefs.setStringList(
         'todos', [...?prefs.getStringList('todos'), jsonEncode(todo.toJson())]);
+  }
+
+  Future<Todo?> getTodo(int id) async {
+    return await _getStoredTodo(id);
   }
 
   Future<List<Todo>> getTodos() async {
