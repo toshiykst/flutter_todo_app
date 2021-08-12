@@ -1,3 +1,4 @@
+import 'package:flutter_todo_app/models/todo.dart';
 import 'package:flutter_todo_app/repositories/todo_repository.dart';
 import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,5 +26,14 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
     state = state.copyWith(todos: todos);
 
     _isLoading = false;
+  }
+
+  Future<void> updateTodo(Todo todo) async {
+    try {
+      await _repository.updateTodo(todo.copyWith(done: true));
+    } catch (e) {
+      print(e);
+      return;
+    }
   }
 }

@@ -7,6 +7,7 @@ class TodoListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoListProvider.select((s) => s.todos));
+    print(todos);
 
     return Scaffold(
       appBar: AppBar(
@@ -16,9 +17,32 @@ class TodoListScreen extends HookConsumerWidget {
         itemCount: todos.length,
         itemBuilder: (context, index) {
           final todo = todos[index];
-          return ListTile(
-            title: Text(todo.title),
-          );
+          return Dismissible(
+              key: UniqueKey(),
+              direction: DismissDirection.startToEnd,
+              onDismissed: (DismissDirection direction) {
+                if (direction == DismissDirection.startToEnd) {
+                  ref
+                      .read(todoListProvider.notifier)
+                      .updateTodo(todo.copyWith(done: true));
+                }
+              },
+              background: Container(
+                color: Colors.green,
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                      ],
+                    )),
+              ),
+              child: ListTile(
+                title: Text(todo.title),
+              ));
         },
       ),
       floatingActionButton: FloatingActionButton(
