@@ -5,6 +5,10 @@ import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_view_model.d
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TodoListScreen extends HookConsumerWidget {
+  const TodoListScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _tabController = useTabController(initialLength: 2, initialIndex: 0);
@@ -57,6 +61,10 @@ class TodoListScreen extends HookConsumerWidget {
 }
 
 class _TodoList extends HookConsumerWidget {
+  const _TodoList({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoListProvider
