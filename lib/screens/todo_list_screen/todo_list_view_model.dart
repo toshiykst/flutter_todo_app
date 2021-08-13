@@ -30,7 +30,7 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
 
   Future<void> updateTodo(Todo todo) async {
     try {
-      await _repository.updateTodo(todo.copyWith(done: true));
+      await _repository.updateTodo(todo);
     } catch (e) {
       print(e);
       return;
