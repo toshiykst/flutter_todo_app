@@ -7,12 +7,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class TodoListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tabController = useTabController(initialLength: 2, initialIndex: 1);
+    final _tabController = useTabController(initialLength: 2, initialIndex: 0);
+
+    final _index = useState(0);
+
+    _tabController.addListener(() {
+      _index.value = _tabController.index;
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todo list'),
-        bottom: TabBar(controller: tabController, tabs: const <Widget>[
+        bottom: TabBar(controller: _tabController, tabs: const <Widget>[
           Tab(
             child: const Text('todos'),
           ),
@@ -22,33 +28,35 @@ class TodoListScreen extends HookConsumerWidget {
         ]),
       ),
       body: TabBarView(
-        controller: tabController,
+        controller: _tabController,
         children: <Widget>[
-          TodoList(),
+          _TodoList(),
           Container(
             child: Text('done todo list'),
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final isAddedTodo = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddTodoFormScreen(),
-                  fullscreenDialog: true));
+      floatingActionButton: _index.value == 0
+          ? FloatingActionButton(
+              onPressed: () async {
+                final isAddedTodo = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddTodoFormScreen(),
+                        fullscreenDialog: true));
 
-          if (isAddedTodo) {
-            ref.read(todoListProvider.notifier).fetchTodos();
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+                if (isAddedTodo) {
+                  ref.read(todoListProvider.notifier).fetchTodos();
+                }
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
 
-class TodoList extends HookConsumerWidget {
+class _TodoList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoListProvider
