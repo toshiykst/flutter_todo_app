@@ -68,7 +68,11 @@ class _TodoList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoListProvider
-        .select((s) => s.todos.where((todo) => !todo.done).toList()));
+        .select((s) => s.todos.where((todo) => !todo.completed).toList()));
+
+    if (todos.length == 0) {
+      return Center(child: Text('No todos'));
+    }
 
     return ListView.builder(
       itemCount: todos.length,
@@ -81,7 +85,7 @@ class _TodoList extends HookConsumerWidget {
               if (direction == DismissDirection.startToEnd) {
                 ref
                     .read(todoListProvider.notifier)
-                    .updateTodo(todo.copyWith(done: true));
+                    .updateTodo(todo.copyWith(completed: true));
               }
             },
             background: Container(
