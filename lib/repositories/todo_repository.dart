@@ -55,4 +55,15 @@ class TodoRepository {
     await prefs.setStringList('todos',
         todos.map((v) => jsonEncode(v.id == todo.id ? todo : v)).toList());
   }
+
+  Future<void> deleteTodo(int id) async {
+    final todos = await _getStoredTodos();
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setStringList(
+        'todos',
+        todos
+            .where((todo) => todo.id != id)
+            .map((todo) => jsonEncode(todo))
+            .toList());
+  }
 }

@@ -38,4 +38,15 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
     state = state.copyWith(
         todos: state.todos.map((t) => t.id == todo.id ? todo : t).toList());
   }
+
+  Future<void> deleteTodo(int id) async {
+    try {
+      await _repository.deleteTodo(id);
+    } catch (e) {
+      print(e);
+      return;
+    }
+    state =
+        state.copyWith(todos: state.todos.where((t) => t.id != id).toList());
+  }
 }

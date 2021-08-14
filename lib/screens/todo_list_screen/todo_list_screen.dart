@@ -78,12 +78,14 @@ class _UncompletedTodoList extends HookConsumerWidget {
         final todo = todos[index];
         return Dismissible(
             key: UniqueKey(),
-            direction: DismissDirection.startToEnd,
             onDismissed: (DismissDirection direction) {
               if (direction == DismissDirection.startToEnd) {
                 ref
                     .read(todoListProvider.notifier)
                     .updateTodo(todo.copyWith(completed: true));
+              }
+              if (direction == DismissDirection.endToStart) {
+                ref.read(todoListProvider.notifier).deleteTodo(todo.id);
               }
             },
             background: Container(
@@ -92,8 +94,22 @@ class _UncompletedTodoList extends HookConsumerWidget {
                   padding: const EdgeInsets.only(left: 16),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.check,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )),
+            ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        Icons.delete,
                         color: Colors.white,
                       ),
                     ],
@@ -127,12 +143,14 @@ class _CompletedTodoList extends HookConsumerWidget {
         final todo = todos[index];
         return Dismissible(
             key: UniqueKey(),
-            direction: DismissDirection.startToEnd,
             onDismissed: (DismissDirection direction) {
               if (direction == DismissDirection.startToEnd) {
                 ref
                     .read(todoListProvider.notifier)
                     .updateTodo(todo.copyWith(completed: false));
+              }
+              if (direction == DismissDirection.endToStart) {
+                ref.read(todoListProvider.notifier).deleteTodo(todo.id);
               }
             },
             background: Container(
@@ -141,8 +159,22 @@ class _CompletedTodoList extends HookConsumerWidget {
                   padding: const EdgeInsets.only(left: 16),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.undo,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )),
+            ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Icon(
+                        Icons.delete,
                         color: Colors.white,
                       ),
                     ],
