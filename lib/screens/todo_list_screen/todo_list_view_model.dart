@@ -35,5 +35,7 @@ class TodoListViewModel extends StateNotifier<TodoListState> {
       print(e);
       return;
     }
+    state = state.copyWith(
+        todos: state.todos.map((t) => t.id == todo.id ? todo : t).toList());
   }
 }

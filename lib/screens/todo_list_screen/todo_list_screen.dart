@@ -34,10 +34,8 @@ class TodoListScreen extends HookConsumerWidget {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          _TodoList(),
-          Container(
-            child: Text('done todo list'),
-          )
+          _UncompletedTodoList(),
+          _CompletedTodoList(),
         ],
       ),
       floatingActionButton: _index.value == 0
@@ -60,8 +58,8 @@ class TodoListScreen extends HookConsumerWidget {
   }
 }
 
-class _TodoList extends HookConsumerWidget {
-  const _TodoList({
+class _UncompletedTodoList extends HookConsumerWidget {
+  const _UncompletedTodoList({
     Key? key,
   }) : super(key: key);
 
@@ -96,6 +94,55 @@ class _TodoList extends HookConsumerWidget {
                     children: [
                       Icon(
                         Icons.check,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )),
+            ),
+            child: ListTile(
+              title: Text(todo.title),
+            ));
+      },
+    );
+  }
+}
+
+class _CompletedTodoList extends HookConsumerWidget {
+  const _CompletedTodoList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todos = ref.watch(todoListProvider
+        .select((s) => s.todos.where((todo) => todo.completed).toList()));
+
+    if (todos.length == 0) {
+      return Center(child: Text('No completed todos'));
+    }
+
+    return ListView.builder(
+      itemCount: todos.length,
+      itemBuilder: (context, index) {
+        final todo = todos[index];
+        return Dismissible(
+            key: UniqueKey(),
+            direction: DismissDirection.startToEnd,
+            onDismissed: (DismissDirection direction) {
+              if (direction == DismissDirection.startToEnd) {
+                ref
+                    .read(todoListProvider.notifier)
+                    .updateTodo(todo.copyWith(completed: false));
+              }
+            },
+            background: Container(
+              color: Colors.grey,
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.undo,
                         color: Colors.white,
                       ),
                     ],
