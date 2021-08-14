@@ -24,10 +24,10 @@ class TodoListScreen extends HookConsumerWidget {
         title: const Text('Todo list'),
         bottom: TabBar(controller: _tabController, tabs: const <Widget>[
           Tab(
-            child: const Text('todos'),
+            child: const Text('uncompleted'),
           ),
           Tab(
-            child: const Text('done'),
+            child: const Text('completed'),
           ),
         ]),
       ),
