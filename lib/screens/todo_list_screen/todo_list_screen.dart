@@ -90,7 +90,11 @@ class _UncompletedTodoList extends HookConsumerWidget {
       return Center(child: Text('No todos'));
     }
 
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (BuildContext context, int index) => Divider(
+        color: Colors.black,
+        height: 0,
+      ),
       itemCount: todos.length,
       itemBuilder: (context, index) {
         final todo = todos[index];
@@ -160,7 +164,11 @@ class _CompletedTodoList extends HookConsumerWidget {
       return Center(child: Text('No completed todos'));
     }
 
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (BuildContext context, int index) => Divider(
+        color: Colors.black,
+        height: 0,
+      ),
       itemCount: todos.length,
       itemBuilder: (context, index) {
         final todo = todos[index];
