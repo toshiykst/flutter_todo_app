@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/screens/todo_detail_screen/todo_detail_view_model.dart';
+import 'package:flutter_todo_app/screens/todo_form_screen/todo_form_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TodoDetailScreen extends HookConsumerWidget {
@@ -16,6 +17,22 @@ class TodoDetailScreen extends HookConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Todo Detail'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.edit),
+              tooltip: 'Edit Todo',
+              onPressed: () async {
+                final isEditedTodo = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TodoFormScreen(todo: todo),
+                        fullscreenDialog: true));
+                if (isEditedTodo) {
+                  ref.read(todoDetailProvider(_todoId).notifier).fetchTodo();
+                }
+              },
+            ),
+          ],
         ),
         body: todo != null
             ? Padding(
