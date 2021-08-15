@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_todo_app/models/todo.dart';
 import 'package:flutter_todo_app/screens/add_todo_form_screen/add_todo_form_screen.dart';
+import 'package:flutter_todo_app/screens/todo_detail_screen/todo_detail_screen.dart';
 import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -8,6 +10,16 @@ class TodoListScreen extends HookConsumerWidget {
   const TodoListScreen({
     Key? key,
   }) : super(key: key);
+
+  Future<void> _handleTabTodo(Todo todo, BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TodoDetailScreen(
+            todoId: todo.id,
+          ),
+        ));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,8 +46,12 @@ class TodoListScreen extends HookConsumerWidget {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          _UncompletedTodoList(),
-          _CompletedTodoList(),
+          _UncompletedTodoList(
+            onTabTodo: _handleTabTodo,
+          ),
+          _CompletedTodoList(
+            onTabTodo: _handleTabTodo,
+          ),
         ],
       ),
       floatingActionButton: _index.value == 0
@@ -59,9 +75,11 @@ class TodoListScreen extends HookConsumerWidget {
 }
 
 class _UncompletedTodoList extends HookConsumerWidget {
-  const _UncompletedTodoList({
-    Key? key,
-  }) : super(key: key);
+  final Future<void> Function(Todo todo, BuildContext context) _onTabTodo;
+
+  const _UncompletedTodoList({Key? key, required onTabTodo})
+      : this._onTabTodo = onTabTodo,
+        super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -117,6 +135,9 @@ class _UncompletedTodoList extends HookConsumerWidget {
             ),
             child: ListTile(
               title: Text(todo.title),
+              onTap: () {
+                _onTabTodo(todo, context);
+              },
             ));
       },
     );
@@ -124,9 +145,11 @@ class _UncompletedTodoList extends HookConsumerWidget {
 }
 
 class _CompletedTodoList extends HookConsumerWidget {
-  const _CompletedTodoList({
-    Key? key,
-  }) : super(key: key);
+  final Future<void> Function(Todo todo, BuildContext context) _onTabTodo;
+
+  const _CompletedTodoList({Key? key, required onTabTodo})
+      : this._onTabTodo = onTabTodo,
+        super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -181,6 +204,9 @@ class _CompletedTodoList extends HookConsumerWidget {
                   )),
             ),
             child: ListTile(
+              onTap: () {
+                _onTabTodo(todo, context);
+              },
               title: Text(todo.title),
             ));
       },
