@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_todo_app/repositories/todo_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class AddTodoFormScreen extends HookConsumerWidget {
-  const AddTodoFormScreen({
+class TodoFormScreen extends HookConsumerWidget {
+  const TodoFormScreen({
     Key? key,
   }) : super(key: key);
 

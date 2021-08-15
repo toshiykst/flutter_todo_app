@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_todo_app/models/todo.dart';
-import 'package:flutter_todo_app/screens/add_todo_form_screen/add_todo_form_screen.dart';
 import 'package:flutter_todo_app/screens/todo_detail_screen/todo_detail_screen.dart';
+import 'package:flutter_todo_app/screens/todo_form_screen/todo_form_screen.dart';
 import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -60,7 +60,7 @@ class TodoListScreen extends HookConsumerWidget {
                 final isAddedTodo = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AddTodoFormScreen(),
+                        builder: (context) => TodoFormScreen(),
                         fullscreenDialog: true));
 
                 if (isAddedTodo) {
