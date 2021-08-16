@@ -7,25 +7,26 @@ import 'package:flutter_todo_app/screens/todo_list_screen/todo_list_view_model.d
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TodoListScreen extends HookConsumerWidget {
-  const TodoListScreen({
+  TodoListScreen({
     Key? key,
   }) : super(key: key);
-
-  Future<void> _handleTapTodo(Todo todo, BuildContext context) async {
-    await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TodoDetailScreen(
-            todoId: todo.id,
-          ),
-        ));
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _tabController = useTabController(initialLength: 2, initialIndex: 0);
 
     final _index = useState(0);
+
+    Future<void> _handleTapTodo(Todo todo, BuildContext context) async {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TodoDetailScreen(
+              todoId: todo.id,
+            ),
+          ));
+      ref.read(todoListProvider.notifier).fetchTodos();
+    }
 
     _tabController.addListener(() {
       _index.value = _tabController.index;
@@ -63,7 +64,7 @@ class TodoListScreen extends HookConsumerWidget {
                         builder: (context) => TodoFormScreen(),
                         fullscreenDialog: true));
 
-                if (isAddedTodo) {
+                if (isAddedTodo == true) {
                   ref.read(todoListProvider.notifier).fetchTodos();
                 }
               },
