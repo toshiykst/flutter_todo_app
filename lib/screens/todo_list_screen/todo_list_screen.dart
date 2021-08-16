@@ -11,7 +11,7 @@ class TodoListScreen extends HookConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-  Future<void> _handleTabTodo(Todo todo, BuildContext context) async {
+  Future<void> _handleTapTodo(Todo todo, BuildContext context) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
@@ -47,10 +47,10 @@ class TodoListScreen extends HookConsumerWidget {
         controller: _tabController,
         children: <Widget>[
           _UncompletedTodoList(
-            onTabTodo: _handleTabTodo,
+            onTabTodo: _handleTapTodo,
           ),
           _CompletedTodoList(
-            onTabTodo: _handleTabTodo,
+            onTabTodo: _handleTapTodo,
           ),
         ],
       ),
