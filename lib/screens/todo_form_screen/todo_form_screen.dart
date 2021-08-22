@@ -75,6 +75,7 @@ class TodoFormScreen extends HookConsumerWidget {
     }, [_formKey]);
 
     return Scaffold(
+        key: Key('todo-form'),
         appBar: AppBar(
           title:
               _todo == null ? const Text('Add todo') : const Text('Edit todo'),

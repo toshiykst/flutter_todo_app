@@ -88,7 +88,7 @@ class _UncompletedTodoList extends HookConsumerWidget {
         .select((s) => s.todos.where((todo) => !todo.completed).toList()));
 
     if (todos.length == 0) {
-      return Center(child: Text('No todos'));
+      return Center(child: const Text('No todos'));
     }
 
     return ListView.separated(
@@ -139,6 +139,7 @@ class _UncompletedTodoList extends HookConsumerWidget {
                   )),
             ),
             child: ListTile(
+              key: const Key('todo-list-item'),
               title: Text(todo.title),
               onTap: () {
                 _onTabTodo(todo, context);
@@ -213,6 +214,7 @@ class _CompletedTodoList extends HookConsumerWidget {
                   )),
             ),
             child: ListTile(
+              key: const Key('todo-list-item'),
               onTap: () {
                 _onTabTodo(todo, context);
               },

@@ -15,6 +15,7 @@ class TodoDetailScreen extends HookConsumerWidget {
     final todo = ref.watch(todoDetailProvider(_todoId).select((s) => s.todo));
 
     return Scaffold(
+        key: const Key('todo-detail'),
         appBar: AppBar(
           title: const Text('Todo Detail'),
           actions: <Widget>[
