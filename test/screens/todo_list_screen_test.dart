@@ -14,9 +14,11 @@ import 'todo_list_screen_test.mocks.dart';
 @GenerateMocks([TodoRepository])
 void main() {
   late TodoRepository mockTodoRepository;
+
   final mockUncompletedTodos =
       mockTodos.where((todo) => !todo.completed).toList();
   final mockCompletedTodos = mockTodos.where((todo) => todo.completed).toList();
+
   final mockUncompletedTodoCount = mockUncompletedTodos.length;
   final mockCompletedTodoCount = mockCompletedTodos.length;
 
@@ -28,10 +30,12 @@ void main() {
     testWidgets('Display "No todos" when uncompleted todos do not exist',
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos()).thenAnswer((_) => Future.value([]));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       expect(find.text('No todos'), findsOneWidget);
     });
 
@@ -39,10 +43,12 @@ void main() {
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       expect(find.text('No todos'), findsNothing);
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockUncompletedTodoCount));
@@ -52,46 +58,58 @@ void main() {
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-form')), findsOneWidget);
     });
 
     testWidgets('Display the todo detail when a todo list item is tapped.',
         (WidgetTester tester) async {
       final targetTodo = mockUncompletedTodos.first;
+
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
       when(mockTodoRepository.getTodo(targetTodo.id))
           .thenAnswer((_) => Future.value(targetTodo));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.byKey(const Key('todo-list-item')).first);
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-detail')), findsOneWidget);
     });
 
     testWidgets('Delete the todo item when it is swiped from end to start',
         (WidgetTester tester) async {
       final targetTodo = mockUncompletedTodos.first;
+
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
       when(mockTodoRepository.deleteTodo(targetTodo.id))
           .thenAnswer((_) => Future.value());
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       expect(find.text(targetTodo.title), findsOneWidget);
+
       await tester.drag(
           find.byType(Dismissible).first, const Offset(-500.0, 0.0));
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockUncompletedTodoCount - 1));
       expect(find.text(targetTodo.title), findsNothing);
@@ -102,26 +120,34 @@ void main() {
         'Move the todo item that is swiped from start to end into completed todo list.',
         (WidgetTester tester) async {
       final targetTodo = mockUncompletedTodos.first;
+
       final updatedTargetTodo =
           mockUncompletedTodos.first.copyWith(completed: true);
+
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
       when(mockTodoRepository.updateTodo(updatedTargetTodo))
           .thenAnswer((_) => Future.value());
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       expect(find.text(targetTodo.title), findsOneWidget);
+
       await tester.drag(
           find.byType(Dismissible).first, const Offset(500.0, 0.0));
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockUncompletedTodoCount - 1));
       expect(find.text(targetTodo.title), findsNothing);
       verify(mockTodoRepository.updateTodo(updatedTargetTodo)).called(1);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.text(targetTodo.title), findsOneWidget);
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockCompletedTodoCount + 1));
@@ -134,12 +160,15 @@ void main() {
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockUncompletedTodos));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.text('No completed todos'), findsOneWidget);
     });
 
@@ -147,12 +176,15 @@ void main() {
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.text('No completed todos'), findsNothing);
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockCompletedTodoCount));
@@ -162,12 +194,15 @@ void main() {
         (WidgetTester tester) async {
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.byType(FloatingActionButton), findsNothing);
     });
 
@@ -176,36 +211,47 @@ void main() {
       final targetTodo = mockCompletedTodos.first;
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
+
       when(mockTodoRepository.getTodo(targetTodo.id))
           .thenAnswer((_) => Future.value(targetTodo));
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       await tester.tap(find.byKey(const Key('todo-list-item')).first);
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-detail')), findsOneWidget);
     });
 
     testWidgets('Delete the todo item when it is swiped from end to start',
         (WidgetTester tester) async {
       final targetTodo = mockCompletedTodos.first;
+
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
       when(mockTodoRepository.deleteTodo(targetTodo.id))
           .thenAnswer((_) => Future.value());
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.text(targetTodo.title), findsOneWidget);
+
       await tester.drag(
           find.byType(Dismissible).first, const Offset(-500.0, 0.0));
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockCompletedTodoCount - 1));
       expect(find.text(targetTodo.title), findsNothing);
@@ -216,28 +262,37 @@ void main() {
         'Move the todo item that is swiped from start to end into uncompleted todo list.',
         (WidgetTester tester) async {
       final targetTodo = mockCompletedTodos.first;
+
       final updatedTargetTodo =
           mockCompletedTodos.first.copyWith(completed: false);
+
       when(mockTodoRepository.getTodos())
           .thenAnswer((_) => Future.value(mockTodos));
       when(mockTodoRepository.updateTodo(updatedTargetTodo))
           .thenAnswer((_) => Future.value());
+
       await pumpScreen(tester: tester, screen: TodoListScreen(), overrides: [
         todoListProvider
             .overrideWithValue(TodoListViewModel(mockTodoRepository))
       ]);
+
       await tester.tap(find.text('completed'));
       await tester.pumpAndSettle();
+
       expect(find.text(targetTodo.title), findsOneWidget);
+
       await tester.drag(
           find.byType(Dismissible).first, const Offset(500.0, 0.0));
       await tester.pumpAndSettle();
+
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockCompletedTodoCount - 1));
       expect(find.text(targetTodo.title), findsNothing);
       verify(mockTodoRepository.updateTodo(updatedTargetTodo)).called(1);
+
       await tester.tap(find.text('uncompleted'));
       await tester.pumpAndSettle();
+
       expect(find.text(targetTodo.title), findsOneWidget);
       expect(find.byKey(const Key('todo-list-item')),
           findsNWidgets(mockUncompletedTodoCount + 1));
