@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_todo_app/models/todo.dart';
-import 'package:flutter_todo_app/repositories/todo_repository.dart';
+import 'package:flutter_todo_app/screens/todo_form_screen/todo_form_view_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TodoFormScreen extends HookConsumerWidget {
@@ -21,29 +21,20 @@ class TodoFormScreen extends HookConsumerWidget {
         useTextEditingController(text: _todo?.description ?? '');
 
     Future<void> _addTodo() async {
-      try {
-        await TodoRepository()
-            .postTodo(_titleController.text, _descriptionController.text);
-      } catch (e) {
-        throw Exception('Failed add todo.');
-      }
+      await ref
+          .read(todoFormProvider)
+          .addTodo(_titleController.text, _descriptionController.text);
+
       ScaffoldMessenger.of(context).showSnackBar(
         _SucceedSnackBar('This todo is added'),
       );
     }
 
     Future<void> _updateTodo() async {
-      if (_todo == null) {
-        throw Exception('todo must be provided.');
-      }
-      try {
-        await TodoRepository().updateTodo(_todo!.copyWith(
-          title: _titleController.text,
-          description: _descriptionController.text,
-        ));
-      } catch (e) {
-        throw Exception('Failed update todo.');
-      }
+      await ref.read(todoFormProvider).updateTodo(_todo!.copyWith(
+            title: _titleController.text,
+            description: _descriptionController.text,
+          ));
       ScaffoldMessenger.of(context).showSnackBar(
         _SucceedSnackBar('This todo is updated'),
       );
@@ -54,7 +45,6 @@ class TodoFormScreen extends HookConsumerWidget {
         return;
       }
       _formKey.currentState?.save();
-
       try {
         if (_todo == null) {
           await _addTodo();
@@ -86,6 +76,7 @@ class TodoFormScreen extends HookConsumerWidget {
                 padding: const EdgeInsets.all(10),
                 child: Column(children: <Widget>[
                   TextFormField(
+                    key: const Key('todo-form-field-title'),
                     controller: _titleController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
