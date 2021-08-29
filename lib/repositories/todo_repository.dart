@@ -18,6 +18,7 @@ class TodoRepository {
   Future<List<Todo>> _getStoredTodos() async {
     final SharedPreferences prefs = await _prefs;
     final storedTodoStrings = prefs.getStringList('todos');
+
     if (storedTodoStrings == null || storedTodoStrings.length == 0) {
       return [];
     }
