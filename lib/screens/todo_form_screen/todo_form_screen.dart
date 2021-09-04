@@ -90,7 +90,10 @@ class TodoFormScreen extends HookConsumerWidget {
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _descriptionController,
-                    maxLines: 10,
+                    maxLines: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? 10
+                        : 5,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
